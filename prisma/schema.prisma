@@ -1,0 +1,28 @@
+// Define como o Prisma gera o cliente TypeScript usado pela aplicação.
+generator client {
+  provider = "prisma-client"
+  // Mantém o código gerado fora de src; ele não deve ser editado manualmente.
+  output   = "../generated/prisma"
+}
+
+// Informa que o banco relacional usado pela aplicação é PostgreSQL.
+// A URL de conexão fica no prisma.config.ts, não neste arquivo.
+datasource db {
+  provider = "postgresql"
+}
+
+// Representa a tabela de tarefas no PostgreSQL.
+model Task {
+  // Identificador único criado automaticamente quando uma tarefa é inserida.
+  id          String   @id @default(cuid())
+  // Texto exibido como tarefa na interface.
+  title       String
+  // Campo obrigatório no schema; inicialmente recebe uma string vazia pela API.
+  description String
+  // Indica se a tarefa foi concluída; começa como false.
+  completed   Boolean  @default(false)
+  // Data de criação preenchida automaticamente.
+  createdAt   DateTime @default(now())
+  // Data atualizada automaticamente a cada alteração no registro.
+  updatedAt   DateTime @updatedAt
+}

@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@base-ui/react"
 import { Plus } from 'lucide-react';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Task = {
   id: string;
@@ -16,32 +16,19 @@ type Task = {
 const Home = () => {
   const [newTask, setNewTask] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [error, setError] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+  const [updatingTaskId, setUpdatingTaskId] = useState<string | null>(null)
 
-  // Adiciona nova tarefa
-  const addTask = () => {
-    const task = newTask.trim();
 
-    if (!task) return;
+  
 
-    setTasks([...tasks, {
-      id: crypto.randomUUID(),
-      title: task,
-      completed: false
-    }]);
 
-    setNewTask("");
-  };
 
   // Remove tarefa
   const removeTask = (idToRemove: string) => {
     setTasks(tasks.filter((task) => task.id !== idToRemove));
   };
-
-
-  const toggleTaskCompleted = (idToToggle: string) => {
-    setTasks(tasks.map((task) => task.id === idToToggle ? { ...task, completed: !task.completed } : task));
-  }
-
 
   return (
     <main className="flex min-h-screen items-center justify-center p-4">
