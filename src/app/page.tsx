@@ -20,9 +20,73 @@ const Home = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [updatingTaskId, setUpdatingTaskId] = useState<string | null>(null)
 
+  // Busca as tarefas ja salvas no banco quando a pagina abre.
+  useEffect(() => {
+    async function loadTasks() {
+      try {
+        const response = await fetch("/api/tasks")
 
-  
+        if (!response.ok) {
+          throw new Error("Não foi possivel carregar as tarefas.");
+        }
 
+        const savedTasks: Task[] = await response.json();
+
+        // Substitui a lista vazia inicial pelos dados do POSTGRESQL
+        setTasks(savedTasks);
+      } catch (error) {
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Ocorreu um erro ao carregar as tarefas."
+        )
+      }
+
+    }
+    void loadTasks();
+  }, []);
+
+
+  // Cria tarefa 
+  const addTask = async () => {
+    const title = newTask.trim();
+
+    if (!title || isCreating) return;
+
+
+    try {
+      setIsCreating(true);
+      setError("");
+
+      const response = await fetch("/api/tasks", {
+        method: "POST",
+        headers: {
+          // Informa que o corpo da requisição está no formato JSON.
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ title })
+      });
+
+      if (!response.ok) {
+        throw new Error("Não foi possivel criar a tarefa.")
+      }
+
+      const createdTask: Task = await response.json();
+
+      setTasks((currentTask) => [createdTask, ...currentTask]);
+
+      setNewTask("");
+
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Ocorreu um erro ao criar a tarefa."
+      )
+    } finally {
+      setIsCreating(false);
+    }
+  }
 
 
   // Remove tarefa
