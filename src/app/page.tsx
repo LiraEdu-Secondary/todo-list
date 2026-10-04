@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Plus } from 'lucide-react';
 import { type SubmitEvent, useEffect, useState } from "react";
-import ThemeToggle from "@/components/theme-toggle";
+import { ModeToggle } from "@/components/mode-toggle";
 
 type Task = {
   id: string;
@@ -207,12 +207,9 @@ const Home = () => {
 
   return (
     <main className="flex min-h-screen items-center justify-center p-4">
-
       <div className="fixed right-4 top-4 z-50">
-        <ThemeToggle />
+        <ModeToggle />
       </div>
-
-
       <div className={`grid w-full gap-4 ${completedTasks.length > 0 ? "max-w-5xl md:grid-cols-2" : "max-w-md grid-cols-1"}`}>
         <Card className="flex w-full flex-col gap-4 p-4">
           <div className="flex w-full flex-row items-center gap-2">
@@ -246,13 +243,13 @@ const Home = () => {
             />
           ) : (
             <div className="flex min-h-24 w-full items-center justify-center rounded-md border border-dashed border-gray-300 px-4 text-center">
-                <p className="text-sm text-gray-500">
-                  {
-                    tasks.length === 0 
-                      ? "Adicione suas tarefas para começar."
-                      : "Todas as tarefas foram concluídas."
+              <p className="text-sm text-gray-500">
+                {
+                  tasks.length === 0
+                    ? "Adicione suas tarefas para começar."
+                    : "Todas as tarefas foram concluídas."
 
-                  }
+                }
               </p>
             </div>
           )}
