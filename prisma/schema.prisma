@@ -17,8 +17,6 @@ model Task {
   id          String   @id @default(cuid())
   // Texto exibido como tarefa na interface.
   title       String
-  // Campo obrigatório no schema; inicialmente recebe uma string vazia pela API.
-  description String
   // Indica se a tarefa foi concluída; começa como false.
   completed   Boolean  @default(false)
   // Data de criação preenchida automaticamente.

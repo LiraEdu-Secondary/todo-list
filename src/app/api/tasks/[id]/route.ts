@@ -19,7 +19,7 @@ export async function PATCH(
   // Guarda somente os campos validos que devem ser alterados.
   const data: {
     title?: string;
-    completed?: boolean
+    completed?: boolean;
   } = {};
 
 
@@ -38,7 +38,7 @@ export async function PATCH(
 
   // Se o frontend enviou title, ele dever ser texto não vazio.
   if ("title" in body) {
-    if (typeof body.title !== "string") {
+    if (typeof body.title !== "string" || !body.title.trim()) {
       return NextResponse.json(
         { error: "O titulo da tarefa é obrigatorio." },
         { status: 400 },
@@ -49,12 +49,12 @@ export async function PATCH(
   }
 
   // Impede requisições vazias, como PATCH com `{}`.
-  // if (Object.keys(data).length === 0) {
-  //   return NextResponse.json(
-  //     { error: "Envie title ou completed para atualizar a tarefa." },
-  //     { status: 400 },
-  //   );
-  // }
+  if (Object.keys(data).length === 0) {
+    return NextResponse.json(
+      { error: "Envie title ou completed para atualizar a tarefa." },
+      { status: 400 },
+    );
+  }
 
   // Confirma a existência antes da atualização para devolver um 404 claro.
   const existingTask = await prisma.task.findUnique({ where: { id } });
@@ -76,7 +76,7 @@ export async function PATCH(
   return NextResponse.json(task);
 }
 
-/**
+/**      
  * DELETE /api/tasks/:id
  *
  * Remove definitivamente uma tarefa identificada pelo id na URL.

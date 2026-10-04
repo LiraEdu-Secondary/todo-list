@@ -1,4 +1,4 @@
-import { Check, Trash } from 'lucide-react'
+import { Check, Pencil, Trash } from 'lucide-react'
 import { Card } from './ui/card'
 import { Button } from './ui/button'
 
@@ -12,25 +12,66 @@ type TodoProps = {
   tasks: Task[]
   onRemoveTask?: (id: string) => void;
   onToggleTaskCompleted: (id: string) => void;
+  onEditTask: (task: Task) => void;
+  updatingTaskId?: string | null;
+  showRemoveButton?: boolean;
+  showCompleteButton?: boolean;
 }
 
-const Todo = ({ tasks, onRemoveTask, onToggleTaskCompleted }: TodoProps) => {
+const Todo = ({ tasks, onRemoveTask, onToggleTaskCompleted, updatingTaskId, onEditTask, showRemoveButton = true, showCompleteButton = true }: TodoProps) => {
   return (
-    <div className='flex flex-col gap-2'>
+    <div className="flex w-full flex-col gap-2">
       {
-        tasks.map((task, index) => (
-          <Card key={index} className='flex w-[400] h-[50] flex-col items-start justify-center gap-2 rounded-md border border-gray-300 p-2'>
-            <div className="flex w-full items-center p-2">
-              <span className={`min-w-0 flex-1 truncate ${task.completed ? "line-through text-gray-400" : ""}`}>
-                {task.title}
-              </span>
-              <div className="ml-auto flex gap-2">
-                <Button size="sm" className="cursor-pointer" onClick={() => onRemoveTask?.(task.id)}>
-                  <Trash />
+        tasks.map((task) => (
+          <Card
+            key={task.id}
+            className="w-full rounded-md border border-gray-300 p-4"
+          >
+            <div className="flex w-full items-center gap-3">
+              <div className="min-w-0 flex-1">
+                <p
+                  className={`font-extrabold ${task.completed ? "line-through text-gray-400" : ""
+                    }`}
+                >
+                  {task.title}
+                </p>
+
+              </div>
+
+              <div className="flex shrink-0 gap-2">
+                {showRemoveButton && (
+                  <Button
+                    size="sm"
+                    className="cursor-pointer"
+                    onClick={() => onRemoveTask?.(task.id)}
+                    aria-label={`Excluir tarefa ${task.title}`}
+                  >
+                    <Trash />
+                  </Button>
+                )}
+
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="cursor-pointer"
+                  onClick={() => onEditTask(task)}
+                  aria-label={`Editar tarefa ${task.title}`}
+                >
+                  <Pencil />
                 </Button>
-                <Button size="sm" variant="ghost" className="cursor-pointer" onClick={() => onToggleTaskCompleted(task.id)}>
-                  <Check />
-                </Button>
+
+                {showCompleteButton && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="cursor-pointer"
+                    onClick={() => onToggleTaskCompleted(task.id)}
+                    disabled={updatingTaskId === task.id}
+                    aria-label={`Concluir tarefa ${task.title}`}
+                  >
+                    <Check />
+                  </Button>
+                )}
               </div>
             </div>
           </Card>

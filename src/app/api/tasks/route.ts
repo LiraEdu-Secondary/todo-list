@@ -42,8 +42,6 @@ export async function POST(request: Request) {
   const task = await prisma.task.create({
     data: {
       title,
-      // O schema atual exige description; até a interface incluí-la, salvamos texto vazio.
-      description: "",
     },
   });
 
